@@ -41,7 +41,7 @@ def initBooks():
     cur = conn.cursor()
     
     with open(SQL_INSERTS, 'r') as inserts:
-        cur.execute(inserts.read(), multi=True)
+        cur.execute(inserts.read())
     
     conn.commit()
     cur.close()
