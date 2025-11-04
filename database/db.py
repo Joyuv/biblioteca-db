@@ -23,19 +23,29 @@ def initDB():
         conn = mysql.connector.connect(
             user=USER, 
             host=HOST, 
-            port=PORT
+            port=PORT,
+            password=PASSWORD
         )
-        cur = conn.cursor()
 
+        cur = conn.cursor()
         with open(SQL_BASE, 'r') as base:
             cur.execute(base.read())
-
-        with open(SQL_INSERTS, 'r') as inserts:
-            cur.execute(inserts.read())
-
         cur.close()
+        conn.commit()
         conn.close()
 
+def initBooks():
+    #TODO
+    '''ARRUMAR ISSO AQUI NÃO TÁ FUNCIONANDO'''
+    conn = connect()
+    cur = conn.cursor()
+    
+    with open(SQL_INSERTS, 'r') as inserts:
+        cur.execute(inserts.read(), multi=True)
+    
+    conn.commit()
+    cur.close()
+    conn.close()
 
 def addUser(nome, email, numero, senha_hash):
     conn = connect()
