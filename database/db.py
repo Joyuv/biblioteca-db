@@ -33,18 +33,36 @@ def initDB():
         cur.close()
         conn.close()
 
+        initBooks()
+
 def initBooks():
-    #TODO
-    '''ARRUMAR ISSO AQUI NÃO TÁ FUNCIONANDO'''
     conn = connect()
     cur = conn.cursor()
-    
-    with open(SQL_INSERTS, 'r') as inserts:
-        cur.execute(inserts.read())
-    
+
+    with open(SQL_INSERTS, 'r', encoding='utf-8') as inserts:
+        sql = inserts.read()
+
+    # divide o script em statements e executa um a um
+    statements = [s.strip() for s in sql.split(';') if s.strip()]
+    for stmt in statements:
+        try:
+            cur.execute(stmt)
+        except Exception:
+            # ignora statements vazios ou que já foram aplicados
+            pass
+
     conn.commit()
     cur.close()
     conn.close()
+    # conn = connect()
+    # cur = conn.cursor()
+    
+    # with open(SQL_INSERTS, 'r') as inserts:
+    #     cur.execute(inserts.read())
+    
+    # conn.commit()
+    # cur.close()
+    # conn.close()
 
 def addUser(nome, email, numero, senha_hash):
     conn = connect()

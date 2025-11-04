@@ -1,4 +1,4 @@
-INSERT INTO Autores (Nome_autor, Nacionalidade, Data_nascimento, Biografia) VALUES
+INSERT INTO autores (nome_autor, nacionalidade, data_nascimento, biografia) VALUES
 ('George Orwell', 'Britânico', '1903-06-25', 'Autor conhecido por suas obras distópicas e críticas sociais.'),
 ('J.K. Rowling', 'Britânica', '1965-07-31', 'Criadora da famosa série Harry Potter.'),
 ('Gabriel García Márquez', 'Colombiano', '1927-03-06', 'Ganhador do Nobel de Literatura, mestre do realismo mágico.'),
@@ -10,7 +10,7 @@ INSERT INTO Autores (Nome_autor, Nacionalidade, Data_nascimento, Biografia) VALU
 ('J.R.R. Tolkien', 'Britânico', '1892-01-03', 'Criador do universo de O Senhor dos Anéis e O Hobbit.'),
 ('Franz Kafka', 'Tcheco', '1883-07-03', 'Autor modernista conhecido por suas obras existencialistas e absurdas.');
 
-INSERT INTO Generos (Nome_genero) VALUES
+INSERT INTO generos (nome_genero) VALUES
 ('Ficção Científica'),
 ('Fantasia'),
 ('Realismo Mágico'),
@@ -22,7 +22,20 @@ INSERT INTO Generos (Nome_genero) VALUES
 ('Aventura'),
 ('Distopia');
 
-INSERT INTO Livros (Titulo, Autor_id, ISBN, Ano_publicacao, Genero_id, Editora_id, Quantidade_disponivel, Resumo) VALUES
+-- Inserção de editoras necessárias para as referências em livros
+INSERT INTO editoras (nome_editora, endereco_editora) VALUES
+('Editora Aurora', 'Rua das Flores, 10, Centro'),
+('Editora Horizonte', 'Av. Paulista, 1000, Bela Vista'),
+('Editora Marítima', 'R. do Porto, 45, Bairro Alto'),
+('Editora Verde', 'Travessa das Palmeiras, 7'),
+('Editora Solar', 'Praça Central, 1, Sala 2'),
+('Editora Luminosa', 'Av. das Nações, 200'),
+('Editora Atlas', 'R. dos Navegantes, 88'),
+('Editora Ponto e Vírgula', 'Alameda dos Livros, 12'),
+('Editora Prisma', 'R. Nova, 150, 3º andar'),
+('Editora Zênite', 'Av. Central, 100');
+
+INSERT INTO livros (titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo) VALUES
 ('1984', 1, '9780451524935', 1949, 10, 5, 12, 'Romance distópico sobre um regime totalitário que controla todos os aspectos da vida.'),
 ('Harry Potter e a Pedra Filosofal', 2, '9780747532699', 1997, 2, 2, 20, 'Primeiro livro da série Harry Potter, onde o jovem bruxo descobre seu destino.'),
 ('Cem Anos de Solidão', 3, '9780060883287', 1967, 3, 4, 15, 'Saga da família Buendía na mítica Macondo, mistura de fantasia e realidade.'),
