@@ -32,10 +32,8 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(id):
-    # GIVA: função que pega os dados do usuário a partir do id (de preferência retornar em um dicionário com os dados pra facilitar minha vida)
     user = getUserById(id)
     return User(id, user["Nome_usuario"])
-    # return User(id, usuario['nome'])
 
 
 @app.route("/")

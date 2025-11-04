@@ -1,6 +1,6 @@
 import mysql.connector 
 from datetime import datetime
-from database.config import USER, HOST, PORT, DATABASE, SQL_BASE
+from database.config import USER, HOST, PORT, DATABASE, PASSWORD, SQL_BASE, SQL_INSERTS
 
 
 def connect() -> mysql.connector.MySQLConnection:
@@ -8,7 +8,8 @@ def connect() -> mysql.connector.MySQLConnection:
         user=USER, 
         host=HOST, 
         port=PORT, 
-        database=DATABASE
+        database=DATABASE,
+        password=PASSWORD
     )
 
     return conn 
@@ -28,6 +29,9 @@ def initDB():
 
         with open(SQL_BASE, 'r') as base:
             cur.execute(base.read())
+
+        with open(SQL_INSERTS, 'r') as inserts:
+            cur.execute(inserts.read())
 
         cur.close()
         conn.close()
