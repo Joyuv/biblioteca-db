@@ -2,6 +2,7 @@
 
 {% block main %}
 {% for livro in livros %}
+{% if livro["quantidade_disponivel"] > 0 %}
 <div>
     <h3>{{ livro["titulo"] }}</h3>
     <p>{{ livro["resumo"] }}</p>
@@ -9,6 +10,8 @@
     <p>Autor: {{ livro["nome_autor"] }}</p>
     <p>Editora: {{ livro["nome_editora"] }}</p>
     <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
+    <button>Realizar empréstimo</button>
 </div>
+{% endif %}
 {% endfor %}
 {% endblock main %}
