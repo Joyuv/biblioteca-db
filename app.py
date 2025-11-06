@@ -8,7 +8,7 @@ from flask_login import (
     LoginManager,
     UserMixin,
 )
-from database.db import initDB, initBooks, addUser, getUserById, getUserByEmail
+from database.db import *
 
 initDB()
 
@@ -41,6 +41,10 @@ def load_user(id):
 def index():
     return render_template("index.html")
 
+@app.route("/livros")
+def livros():
+    livros = getBooks()
+    return render_template('livros/list.html', livros=livros)
 
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
@@ -61,7 +65,7 @@ def cadastro():
             flash("Este email já está cadastrado", "error")
             return redirect(url_for("cadastro"))
         return redirect(url_for("login"))
-    return render_template("cadastro.html")
+    return render_template("auth/cadastro.html")
 
 
 @app.route("/login", methods=["GET", "POST"])
@@ -75,9 +79,10 @@ def login():
         if user is not None:
             if check_password_hash(user["senha_hash"], senha):
                 login_user(User(user["id_usuario"], user["nome_usuario"]))
+            return redirect(url_for("index"))
+        flash("Email ou senha incorreta", "error")
 
-        return redirect(url_for("index"))
-    return render_template("login.html")
+    return render_template("auth/login.html")
 
 
 @app.route("/logout")
