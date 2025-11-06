@@ -1,5 +1,5 @@
 import mysql.connector 
-from datetime import datetime
+from datetime import date
 from database.config import USER, HOST, PORT, DATABASE, PASSWORD, SQL_BASE, SQL_INSERTS
 
 
@@ -54,39 +54,106 @@ def initBooks():
     conn.commit()
     cur.close()
     conn.close()
-    # conn = connect()
-    # cur = conn.cursor()
-    
-    # with open(SQL_INSERTS, 'r') as inserts:
-    #     cur.execute(inserts.read())
-    
-    # conn.commit()
-    # cur.close()
-    # conn.close()
 
 def getBooks():
+    query = '''
+        SELECT 
+            l.*,
+            g.nome_genero,
+            a.nome_autor,
+            e.nome_editora
+        FROM livros l
+        INNER JOIN generos g
+            ON l.genero_id = g.id_genero
+        INNER JOIN autores a
+            ON l.autor_id = a.id_autor
+        INNER JOIN editoras e
+            ON l.editora_id = e.id_editora
+    '''
     with connect() as conn:
         cur = conn.cursor(dictionary=True)
-
-        query = '''
-            SELECT 
-                l.*,
-                g.nome_genero,
-                a.nome_autor,
-                e.nome_editora
-            FROM livros l
-            INNER JOIN generos g
-                ON l.genero_id = g.id_genero
-            INNER JOIN autores a
-                ON l.autor_id = a.id_autor
-            INNER JOIN editoras e
-                ON l.editora_id = e.id_editora
-        '''
-
         cur.execute(query)
         livros = cur.fetchall()
         cur.close()
     return livros
+
+def addUserBook(user_id, book_id):
+    user_id = int(user_id)
+    book_id = int(book_id)
+
+    data_emprestimo = date.today()
+
+    if data_emprestimo.day + 7 > 31:
+        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month+1, data_emprestimo.day+7-31).strftime("%Y-%m-%d")
+    else:
+        devolucao_prevista = date(data_emprestimo.year, data_emprestimo.month, data_emprestimo.day + 7).strftime("%Y-%m-%d")
+
+    data_emprestimo = data_emprestimo.strftime("%Y-%m-%d")
+
+    query = '''
+        INSERT INTO emprestimos (usuario_id, livro_id, data_emprestimo, data_devolucao_prevista, status_emprestimo) 
+        VALUES(
+            %s,
+            %s,
+            %s,
+            %s,
+            %s
+        )
+    '''
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, (user_id, book_id, data_emprestimo, devolucao_prevista, 'pendente'))
+        conn.commit()
+        cur.close()
+
+def getUserBooks(user_id):
+    query = '''
+        SELECT 
+            l.*,
+            ep.*,
+            g.nome_genero,
+            a.nome_autor,
+            e.nome_editora
+        FROM usuarios u
+        INNER JOIN emprestimos ep
+            ON u.id_usuario = ep.usuario_id
+        INNER JOIN livros l
+            ON l.id_livro = ep.livro_id
+
+        INNER JOIN generos g
+            ON l.genero_id = g.id_genero
+        INNER JOIN autores a
+            ON l.autor_id = a.id_autor
+        INNER JOIN editoras e
+            ON l.editora_id = e.id_editora
+        WHERE u.id_usuario = %s
+        ORDER BY FIELD(status_emprestimo, 'atrasado', 'pendente','devolvido')
+    '''
+    with connect() as conn:
+        cur = conn.cursor(dictionary=True)
+        cur.execute(query, (user_id,))
+        livros = cur.fetchall()
+        cur.close()
+    return livros
+
+def returnBook(emprestimo_id):
+    # depois fazer adicionar na multa se estiver atrasado
+    data_devolucao = date.today().strftime("%Y-%m-%d")
+
+    query = '''
+        UPDATE emprestimos
+        SET 
+            status_emprestimo='devolvido',
+            data_devolucao_real=%s
+        WHERE id_emprestimo=%s
+    '''
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, (data_devolucao, emprestimo_id))
+        conn.commit()
+        cur.close()
+
 
 def addUser(nome, email, numero, senha_hash):
     conn = connect()
@@ -97,7 +164,7 @@ def addUser(nome, email, numero, senha_hash):
         VALUES (%s, %s, %s, %s, %s, %s)
     '''
     
-    date = datetime.today().strftime("%Y-%m-%d")
+    data = date.today().strftime("%Y-%m-%d")
 
     usuario = (nome, email, numero, senha_hash, date, 0)
 

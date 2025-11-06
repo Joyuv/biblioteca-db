@@ -15,7 +15,8 @@
         </nav>
         <nav> <!-- LINKS DE AUTENTICAÇÃO -->
             {% if current_user.is_authenticated %}
-                <span>Bem vindo, {{ current_user.nome }} | </span>
+                {# <span>Bem vindo, {{ current_user.nome }}</span> #}
+                <a href="{{ url_for('meus_emprestimos') }}">Meus Empréstimos</a>
                 <a href="{{ url_for('logout') }}">Sair</a>
             {% else %}
                 <a href="{{ url_for('login') }}">Login</a>

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% for emprestimo in emprestimos %}
+<div>
+    <h3>{{ emprestimo["titulo"] }}</h3>
+    <p>Estado de devolução: {{ emprestimo["status_emprestimo"] }}</p>
+    <p>Data de empréstimo: {{ emprestimo["data_emprestimo"] }}</p>
+    {% if emprestimo["status_emprestimo"] == "devolvido" %}
+    <p>Data de devolução: {{ emprestimo["data_devolucao_real"] }}</p>
+    {% else %}
+    <p>Data de devolução prevista: {{ emprestimo["data_devolucao_prevista"] }}</p>
+    <a href="{{ url_for('devolver_livro', emprestimo_id=emprestimo['id_emprestimo']) }}"><button>Devolver livro</button></a>
+    {% endif %}
+</div>
+{% endfor %}
+{% endblock main %}

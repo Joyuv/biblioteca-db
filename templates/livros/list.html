@@ -2,7 +2,7 @@
 
 {% block main %}
 {% for livro in livros %}
-{% if livro["quantidade_disponivel"] > 0 %}
+{% if livro["quantidade_disponivel"] > 0 and livro["id_livro"] not in nao_exibir%}
 <div>
     <h3>{{ livro["titulo"] }}</h3>
     <p>{{ livro["resumo"] }}</p>
@@ -10,7 +10,7 @@
     <p>Autor: {{ livro["nome_autor"] }}</p>
     <p>Editora: {{ livro["nome_editora"] }}</p>
     <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
-    <button>Realizar empréstimo</button>
+    <a href="{{ url_for('pegar_livro', livro_id=livro['id_livro']) }}"><button>Realizar empréstimo</button></a>
 </div>
 {% endif %}
 {% endfor %}
