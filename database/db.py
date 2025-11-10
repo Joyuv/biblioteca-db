@@ -1,6 +1,7 @@
 import mysql.connector 
 from datetime import date
 from database.config import USER, HOST, PORT, DATABASE, PASSWORD, SQL_BASE, SQL_INSERTS
+from werkzeug.security import generate_password_hash
 
 
 def connect() -> mysql.connector.MySQLConnection:
@@ -31,9 +32,12 @@ def initDB():
         with open(SQL_BASE, 'r') as base:
             cur.execute(base.read())
         cur.close()
+
         conn.close()
+        pswd_hash = generate_password_hash('admin')
 
         initBooks()
+        addUser(nome='admin', email='admin@admin', senha_hash=pswd_hash, admin=True)
 
 def initBooks():
     conn = connect()
@@ -153,18 +157,18 @@ def returnBook(emprestimo_id):
         cur.close()
 
 
-def addUser(nome, email, numero, senha_hash):
+def addUser(nome, email, senha_hash, numero = None, admin = False):
     conn = connect()
     cur = conn.cursor()
 
     adduser = '''
-        INSERT INTO usuarios (nome_usuario, email, numero_telefone, senha_hash, data_inscricao, multa_atual)
+        INSERT INTO usuarios (nome_usuario, email, numero_telefone, senha_hash, data_inscricao, admin)
         VALUES (%s, %s, %s, %s, %s, %s)
     '''
     
     data = date.today()
 
-    usuario = (nome, email, numero, senha_hash, data, 0)
+    usuario = (nome, email, numero, senha_hash, data, admin)
 
     cur.execute(adduser, usuario)
 
