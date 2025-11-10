@@ -213,7 +213,7 @@ def update_autor():
             data_nascimento = request.form.get("data_nascimento")
             biografia = request.form.get("biografia")
             updateAuthor(nome, nacionalidade, data_nascimento, biografia)
-            return redirect("autores")
+            return redirect(url_for("autores"))
 
     return render_template("autores/update.html")
 
@@ -226,7 +226,7 @@ def update_editora():
             nome_editora = request.form.get("nome_editora")
             endereco = request.form.get("endereco")
             updatePublisher(nome_editora, endereco)
-            return redirect("editoras")
+            return redirect(url_for("editoras"))
 
     return render_template("editoras/update.html")
 
@@ -255,9 +255,18 @@ def update_livro():
                 quantidade_disponivel,
                 resumo,
             )
-            return redirect("livros")
+            return redirect(url_for("livros"))
 
     return render_template("livros/update.html")
+
+
+@app.route("/autor/delete/<autor_id>", methods=["POST"])
+@login_required
+def delete_autor(autor_id):
+    if current_user.admin == 1:
+        deleteAuthor(autor_id)
+        return redirect(url_for("autores"))
+    return redirect(url_for("index"))
 
 
 if __name__ == "__main__":
