@@ -58,13 +58,14 @@ def livros():
 @login_required
 def pegar_livro(livro_id):
     addUserBook(current_user.id, livro_id)
+    flash("📚 Empréstimo realizado com sucesso!", "success")
     return redirect(url_for("livros"))
 
 @app.route('/livros/<emprestimo_id>/devolver')
 @login_required
 def devolver_livro(emprestimo_id):
     returnBook(emprestimo_id)
-
+    flash("📚 Devolução realizada com sucesso!", "success")
     return redirect(url_for("meus_emprestimos"))
 
 @app.route('/meus-emprestimos')
