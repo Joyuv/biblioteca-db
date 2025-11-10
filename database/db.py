@@ -167,7 +167,7 @@ def addUser(nome, email, senha_hash, numero = None, admin = False):
     conn = connect()
     cur = conn.cursor()
 
-    adduser = '''
+    adduser = """
         INSERT INTO usuarios (nome_usuario, email, numero_telefone, senha_hash, data_inscricao, admin)
         VALUES (%s, %s, %s, %s, %s, %s)
     """
