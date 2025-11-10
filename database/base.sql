@@ -42,7 +42,8 @@ CREATE TABLE usuarios (
     senha_hash VARCHAR(255) NOT NULL,
     numero_telefone VARCHAR(15),
     data_inscricao DATE NOT NULL,
-    multa_atual DECIMAL(10, 2) NOT NULL DEFAULT(0)
+    multa_atual DECIMAL(10, 2) NOT NULL DEFAULT(0),
+    admin BOOLEAN NOT NULL DEFAULT 0 
 );
 
 CREATE TABLE emprestimos (
