@@ -219,7 +219,7 @@ def getUserByEmail(email):
 
 def addAuthor(nome, nacionalidade, data_nascimento, biografia):
     query = '''
-        INSERT INTO autores(nome, nacionalidade, data_nascimento, biografia) VALUES
+        INSERT INTO autores(nome_autor, nacionalidade, data_nascimento, biografia) VALUES
         (%s, %s, %s, %s)
 
     '''
@@ -228,13 +228,14 @@ def addAuthor(nome, nacionalidade, data_nascimento, biografia):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, params)
+        conn.commit()
         cur.close()     
 
 def getAuthors():
     query = '''SELECT * FROM autores'''
 
     with connect() as conn:
-        cur = conn.cursor()
+        cur = conn.cursor(dictionary=True)
 
         cur.execute(query)
         results = cur.fetchall()
@@ -253,11 +254,12 @@ def addBook(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quant
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, params)
+        conn.commit()
         cur.close()
 
 def addPublisher(nome, endereco):
     query = '''
-        INSERT INTO editoras(nome, endereco) VALUES
+        INSERT INTO editoras(nome_editora, endereco_editora) VALUES
         (%s, %s)
 
     '''
@@ -266,13 +268,14 @@ def addPublisher(nome, endereco):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, params)
+        conn.commit()
         cur.close()
 
 def getPublishers():
     query = '''SELECT * FROM editoras'''
 
     with connect() as conn:
-        cur = conn.cursor()
+        cur = conn.cursor(dictionary=True)
 
         cur.execute(query)
         results = cur.fetchall()

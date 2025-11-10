@@ -125,38 +125,40 @@ def logout():
 @app.route('/autor/add', methods=["GET", "POST"])
 @login_required
 def adicionar_autor():
+    print(current_user.admin)
     if request.method == "POST":
-        if current_user.admin is True:
+        if current_user.admin == 1:
             nome = request.form.get('nome')
-            onalidade = request.form.get('nacionalidade')
+            nacionalidade = request.form.get('nacionalidade')
             data_nascimento = request.form.get('data_nascimento')
             biografia = request.form.get('biografia')
             if nome:
+                print(data_nascimento)
                 addAuthor(nome, nacionalidade, data_nascimento, biografia)
-                return redirect(url_for('/livros'))
+                return redirect(url_for('livros')) # levar pra pra página de autores
             flash("Nome não pode estar vazio")
     
-    return(render_template('autor/add.html'))
+    return(render_template('autores/add.html'))
 
 @app.route('/editora/add', methods=["GET", "POST"])
 @login_required
 def adicionar_editora():
     if request.method == 'POST':
-        if current_user.admin is True:
+        if current_user.admin == 1:
             nome_editora = request.form.get('nome_editora')
-            endereco_editora = request.form.get('endereco_editora')
+            endereco_editora = request.form.get('endereco')
             if nome_editora:
                 addPublisher(nome_editora, endereco_editora)
-                return redirect(url_for('/editoras'))
+                return redirect(url_for('livros'))
             flash("Nome não pode estar vazio")
     
-    return(render_template('/editora/add.html'))
+    return(render_template('/editoras/add.html'))
 
 @app.route('/livro/add')
 @login_required
 def adicionar_livro():
     if request.method == "POST":
-        if current_user.admin is True:
+        if current_user.admin == 1:
             titulo = request.form.get('titulo')
             autor_id = request.form.get('autor')
             isbn = request.form.get('isbn')
@@ -168,10 +170,21 @@ def adicionar_livro():
 
             if titulo and autor_id and isbn and genero_id and editora_id and quantidade_disponivel:
                 addBook(nome, nacionalidade, data_nascimento, biografia)
-                return redirect(url_for('/livros'))
+                return redirect(url_for('livros'))
             flash("Nome não pode estar vazio")
         
-    return(render_template('autor/add.html'))
+    return(render_template('livros/add.html'))
+
+@app.route('/autores')
+def autores():
+    autores = getAuthors()
+    return render_template("autores/list.html", autores=autores)
+
+
+@app.route('/editoras')
+def editoras():
+    editoras = getPublishers()
+    return render_template("editoras/list.html", editoras=editoras)
 
 
 if __name__ == "__main__":
