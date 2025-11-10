@@ -1,6 +1,7 @@
 import mysql.connector 
 from datetime import date
 from database.config import USER, HOST, PORT, DATABASE, PASSWORD, SQL_BASE, SQL_INSERTS
+from werkzeug.security import generate_password_hash
 
 
 def connect() -> mysql.connector.MySQLConnection:
@@ -31,9 +32,12 @@ def initDB():
         with open(SQL_BASE, 'r') as base:
             cur.execute(base.read())
         cur.close()
+
         conn.close()
+        pswd_hash = generate_password_hash('admin')
 
         initBooks()
+        addUser(nome='admin', email='admin@admin', senha_hash=pswd_hash, admin=True)
 
 def initBooks():
     conn = connect()
@@ -153,18 +157,18 @@ def returnBook(emprestimo_id):
         cur.close()
 
 
-def addUser(nome, email, numero, senha_hash):
+def addUser(nome, email, senha_hash, numero = None, admin = False):
     conn = connect()
     cur = conn.cursor()
 
     adduser = '''
-        INSERT INTO usuarios (nome_usuario, email, numero_telefone, senha_hash, data_inscricao, multa_atual)
+        INSERT INTO usuarios (nome_usuario, email, numero_telefone, senha_hash, data_inscricao, admin)
         VALUES (%s, %s, %s, %s, %s, %s)
     '''
     
     data = date.today()
 
-    usuario = (nome, email, numero, senha_hash, data, 0)
+    usuario = (nome, email, numero, senha_hash, data, admin)
 
     cur.execute(adduser, usuario)
 
@@ -207,3 +211,66 @@ def getUserByEmail(email):
     cur.close()
     conn.close()
     return user
+
+def addAuthor(nome, nacionalidade, data_nascimento, biografia):
+    query = '''
+        INSERT INTO autores(nome, nacionalidade, data_nascimento, biografia) VALUES
+        (%s, %s, %s, %s)
+
+    '''
+    params = (nome, nacionalidade, data_nascimento, biografia)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        cur.close()     
+
+def getAuthors():
+    query = '''SELECT * FROM autores'''
+
+    with connect() as conn:
+        cur = conn.cursor()
+
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        cur.close()     
+    return results
+
+def addBook(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo):
+    query = '''
+        INSERT INTO livros(titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo) VALUES
+        (%s, %s, %s, %s, %s, %s, %s, %s)
+
+    '''
+    params = (titulo, autor_id, isbn, ano_publicacao, genero_id, editora_id, quantidade_disponivel, resumo)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        cur.close()
+
+def addPublisher(nome, endereco):
+    query = '''
+        INSERT INTO editoras(nome, endereco) VALUES
+        (%s, %s)
+
+    '''
+    params = (nome, endereco)
+
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(query, params)
+        cur.close()
+
+def getPublishers():
+    query = '''SELECT * FROM editoras'''
+
+    with connect() as conn:
+        cur = conn.cursor()
+
+        cur.execute(query)
+        results = cur.fetchall()
+        
+        cur.close()     
+    return results
