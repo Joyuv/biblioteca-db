@@ -280,7 +280,7 @@ def delete_autor(autor_id):
 def delete_editora(id_editora):
     if current_user.admin == 1:
         for livro in getBooks():
-            if id_editora == livro["editora_id"]:
+            if int(id_editora) == int(livro["editora_id"]):
                 return redirect(url_for("editoras"))
         deletePublisher(id_editora)
         return redirect(url_for("editoras"))
