@@ -92,7 +92,7 @@ def cadastro():
 
         if not user:
             senha_hash = generate_password_hash(senha)
-            addUser(nome, email, telefone, senha_hash)
+            addUser(nome, email, senha_hash, telefone)
             return redirect(url_for("login"))
         else:
             flash("Este email já está cadastrado", "error")
@@ -187,8 +187,10 @@ def adicionar_livro():
                 addBook(nome, nacionalidade, data_nascimento, biografia)
                 return redirect(url_for("livros"))
             flash("Nome não pode estar vazio")
-
-    return render_template("livros/add.html")
+    generos = getGenres()
+    editoras = getPublishers()
+    autores = getAuthors()
+    return render_template("livros/add.html", autores=autores, generos=generos, editoras=editoras)
 
 
 @app.route("/autores")
@@ -212,7 +214,7 @@ def update_autor():
             nacionalidade = request.form.get("nacionalidade")
             data_nascimento = request.form.get("data_nascimento")
             biografia = request.form.get("biografia")
-            updateAuthor(nome, nacionalidade, data_nascimento, biografia)
+            #updateAuthor(nome, nacionalidade, data_nascimento, biografia)
             return redirect(url_for("autores"))
 
     return render_template("autores/update.html")
@@ -245,16 +247,16 @@ def update_livro():
             quantidade_disponivel = request.form.get("quantidade_disponivel")
             resumo = request.form.get("resumo")
 
-            updateBook(
-                titulo,
-                autor_id,
-                isbn,
-                ano_publicacao,
-                genero_id,
-                editora_id,
-                quantidade_disponivel,
-                resumo,
-            )
+            # updateBook(
+            #     titulo,
+            #     autor_id,
+            #     isbn,
+            #     ano_publicacao,
+            #     genero_id,
+            #     editora_id,
+            #     quantidade_disponivel,
+            #     resumo,
+            # )
             return redirect(url_for("livros"))
 
     return render_template("livros/update.html")
@@ -267,28 +269,28 @@ def delete_autor(autor_id):
         for livro in getBooks():
             if autor_id == livro["autor_id"]:
                 return redirect(url_for("autores"))
-        deleteAuthor(autor_id)
+        #deleteAuthor(autor_id)
         return redirect(url_for("autores"))
     return redirect(url_for("index"))
 
 
 @app.route("/editora/delete/<editora_id>", methods=["POST"])
 @login_required
-def delete_autor(editora_id):
+def delete_editora(editora_id):
     if current_user.admin == 1:
         for livro in getBooks():
             if editora_id == livro["editora_id"]:
                 return redirect(url_for("editoras"))
-        deletePublisher(editora_id)
+        #deletePublisher(editora_id)
         return redirect(url_for("editoras"))
     return redirect(url_for("index"))
 
 
 @app.route("/livro/delete/<livro_id>", methods=["POST"])
 @login_required
-def delete_autor(livro_id):
+def delete_livro(livro_id):
     if current_user.admin == 1:
-        deleteBook(livro_id)
+        #deleteBook(livro_id)
         return redirect(url_for("livros"))
     return redirect(url_for("index"))
 
