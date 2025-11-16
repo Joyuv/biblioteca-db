@@ -14,11 +14,24 @@
     <h3>{{ editora["nome_editora"] }}</h3>
     <p>Endereço: {{ editora["endereco_editora"] }}</p>
     {% if current_user.admin == 1 %}
-    <form action="{{url_for('delete_editora', id_editora=editora['id_editora'])}}" method="POST">
-        <a href="{{ url_for('update_editora', id_editora=editora['id_editora']) }}" class="btn-emprestar">Editar</a>
-        <button class="btn-emprestar">Deletar</button>
-    </form>
+    <a href="{{ url_for('update_editora', id_editora=editora['id_editora']) }}" class="btn-emprestar">Editar</a>
+    <a href="#modal-deletar-{{ editora['id_editora'] }}"type="submit" class="btn-emprestar">Deletar</a>
     {% endif %}
 </div>
+
+</div>
+    <div id="modal-deletar-{{ editora['id_editora'] }}" class="modal">
+    <div class="modal-content">
+    <h3>Confirmar Deleção</h3>
+    <p>Você realmente deseja deletar esta editora?</p>
+    <form action="{{ url_for('delete_editora', id_editora=editora['id_editora']) }}" method="POST">
+        <div class="modal-botoes">
+            <button type="submit" class="confirmar">Confirmar</button>
+            <a href="#!" class="cancelar">Cancelar</a>
+        </div>
+    </form>
+    </div>
+</div>
 {% endfor %}
+
 {% endblock main %}

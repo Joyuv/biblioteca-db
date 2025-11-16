@@ -18,16 +18,14 @@
                 <p>Autor: {{ livro["nome_autor"] }}</p>
                 <p>Editora: {{ livro["nome_editora"] }}</p>
                 <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
-                <a href="#modal-{{ livro['id_livro'] }}" class="btn-emprestar">Realizar empréstimo</a>
+                <a href="#modal-emprestimo-{{ livro['id_livro'] }}" class="btn-emprestar">Realizar empréstimo</a>
                 {% if current_user.admin == 1 %}
-                <form action="{{ url_for('delete_livro', livro_id=livro['id_livro']) }}" method="POST">
-                    <a href="{{ url_for('update_livro', livro_id=livro['id_livro']) }}" class="btn-emprestar">Atualizar livro</a>
-                    <button type="submit" class="btn-emprestar">Deletar</button>
-                </form>
+                <a href="{{ url_for('update_livro', livro_id=livro['id_livro']) }}" class="btn-emprestar">Atualizar livro</a>
+                <a href="#modal-deletar-{{ livro['id_livro'] }}"type="submit" class="btn-emprestar">Deletar</a>
                 {% endif %}
             </div>
 
-            <div id="modal-{{ livro['id_livro'] }}" class="modal">
+            <div id="modal-emprestimo-{{ livro['id_livro'] }}" class="modal">
                 <div class="modal-content">
                 <h3>Confirmar Empréstimo</h3>
                 <p>Você realmente deseja realizar o empréstimo deste livro?</p>
@@ -35,6 +33,19 @@
                     <a href="{{ url_for('pegar_livro', livro_id=livro['id_livro']) }}" class="confirmar">Confirmar</a>
                     <a href="#!" class="cancelar">Cancelar</a>
                 </div>
+                </div>
+
+            </div>
+                <div id="modal-deletar-{{ livro['id_livro'] }}" class="modal">
+                <div class="modal-content">
+                <h3>Confirmar Deleção</h3>
+                <p>Você realmente deseja deletar este livro?</p>
+                <form action="{{ url_for('delete_livro', livro_id=livro['id_livro']) }}" method="POST">
+                    <div class="modal-botoes">
+                        <button type="submit" class="confirmar">Confirmar</button>
+                        <a href="#!" class="cancelar">Cancelar</a>
+                    </div>
+                </form>
                 </div>
             </div>
         {% endif %}
