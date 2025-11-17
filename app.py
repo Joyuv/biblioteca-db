@@ -309,9 +309,8 @@ def delete_livro(livro_id):
     if current_user.admin == 1:
         for emprestimo in getEmprestimos():
             if emprestimo["livro_id"] == livro_id:
-                if emprestimo["status_emprestimo"] in ("pendente", "atrasado"):
-                    flash("Você só pode deletar esse livro após a devolução de todas as unidades", "error")
-                    return redirect(url_for("livros"))
+                flash("Você não pode deletar esse livro", "error")
+                return redirect(url_for("livros"))
         deleteBook(livro_id)
         flash("Livro deletado com sucesso", "success")
         return redirect(url_for("livros"))
