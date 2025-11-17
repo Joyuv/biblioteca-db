@@ -23,7 +23,7 @@
     {% endif %} #}
 
     {% if current_user.admin == 1 %}
-    <a href="{{ url_for('update_autor', id_autor=autor['id_autor']) }}" class="btn-emprestar">Editar</a>
+    <a href="{{ url_for('update_autor', autor_id=autor['id_autor']) }}" class="btn-emprestar">Editar</a>
     <a href="#modal-deletar-{{ autor['id_autor'] }}"type="submit" class="btn-emprestar">Deletar</a>
     {% endif %}
 </div>

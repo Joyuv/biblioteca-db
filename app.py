@@ -208,20 +208,20 @@ def editoras():
     return render_template("editoras/list.html", editoras=editoras)
 
 
-@app.route("/autor/update/<id_autor>", methods=["GET", "POST"])
+@app.route("/autor/update/<autor_id>", methods=["GET", "POST"])
 @login_required
-def update_autor(id_autor):
+def update_autor(autor_id):
     if request.method == "POST":
         if current_user.admin == 1:
             nome = request.form.get("nome")
             nacionalidade = request.form.get("nacionalidade")
             data_nascimento = request.form.get("data_nascimento")
             biografia = request.form.get("biografia")
-            updateAuthor(id_autor, nome, nacionalidade, data_nascimento, biografia)
+            updateAuthor(autor_id, nome, nacionalidade, data_nascimento, biografia)
             flash('Autor atualizado com sucesso', 'success')
 
             return redirect(url_for("autores"))
-    autor = getAuthorById(id_autor)
+    autor = getAuthorById(autor_id)
     return render_template("autores/update.html", autor=autor)
 
 
