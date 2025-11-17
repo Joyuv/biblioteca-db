@@ -113,6 +113,18 @@ def addUserBook(user_id, book_id):
         cur.close()
 
 
+    query = """
+        UPDATE livros SET quantidade_disponivel = quantidade_disponivel - 1 WHERE id_livro = %s;
+    """
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            query, (book_id,)
+        )
+        conn.commit()
+        cur.close()
+
+
 def getUserBooks(user_id):
     query = """
         SELECT 
@@ -171,6 +183,29 @@ def returnBook(emprestimo_id):
     with connect() as conn:
         cur = conn.cursor()
         cur.execute(query, (data_devolucao, emprestimo_id))
+        conn.commit()
+        cur.close()
+
+    query = """
+        SELECT livro_id 
+        FROM emprestimos
+        WHERE id_emprestimo = %s
+    """
+
+    with connect() as conn:
+        cur = conn.cursor(dictionary=True)
+        cur.execute(query, (emprestimo_id,))
+        book_id = cur.fetchone()["livro_id"]
+        cur.close()
+
+    query = """
+        UPDATE livros SET quantidade_disponivel = quantidade_disponivel + 1 WHERE id_livro = %s;
+    """
+    with connect() as conn:
+        cur = conn.cursor()
+        cur.execute(
+            query, (book_id,)
+        )
         conn.commit()
         cur.close()
 

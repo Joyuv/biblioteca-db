@@ -18,6 +18,7 @@
                 <p>Autor: {{ livro["nome_autor"] }}</p>
                 <p>Editora: {{ livro["nome_editora"] }}</p>
                 <p>Ano de publicação: {{ livro["ano_publicacao"] }}</p>
+                <p>Quantidade disponível: {{ livro["quantidade_disponivel"] }}</p>
                 <a href="#modal-emprestimo-{{ livro['id_livro'] }}" class="btn-emprestar">Realizar empréstimo</a>
                 {% if current_user.admin == 1 %}
                 <a href="{{ url_for('update_livro', livro_id=livro['id_livro']) }}" class="btn-emprestar">Atualizar livro</a>
