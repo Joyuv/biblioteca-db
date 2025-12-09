@@ -1,5 +1,4 @@
 DELIMITER //
-
 -- Pós evento
 CREATE TRIGGER trg_repoe_livro AFTER UPDATE 
 ON emprestimos 
