@@ -16,5 +16,3 @@ FOR EACH ROW
 BEGIN
 	UPDATE livros SET quantidade_disponivel = quantidade_disponivel - 1 WHERE id_livro = NEW.livro_id;
 END //
-
-DROP TRIGGER trg_repoe_livro //
