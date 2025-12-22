@@ -82,7 +82,6 @@ begin
     end if;
 end//
 
-
 -- Ajustar ISBN com tamanho diferente de 13 (se não tiver 13 caracteres , ele vira 0)
 
 create trigger trg_corrige_isbn
@@ -93,7 +92,6 @@ begin
         set NEW.isbn = '0000000000000';
     end if;
 end//
-
 
 -- Ajustar data futura (se estiver no futuro coloque na data atual)
 
@@ -106,7 +104,6 @@ begin
     end if;
     
 end//
-
 
 -- Impedir títulos de livros vazios
 
@@ -134,5 +131,3 @@ begin
     end if;
 end;
 //
-
-DELIMITER ;
