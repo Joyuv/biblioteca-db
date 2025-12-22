@@ -61,7 +61,7 @@ CREATE TABLE emprestimos (
 CREATE TABLE logs(
 	id INT AUTO_INCREMENT PRIMARY KEY,
     tabela ENUM('autores', 'editoras', 'emprestimos', 'generos', 'livros', 'usuarios') NOT NULL,
-    tipo_mudanca ENUM('update', 'delete') NOT NULL,
+    acao ENUM('update', 'delete') NOT NULL,
     data_alteracao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     registro_id INT NOT NULL,
     dados_antigos JSON NOT NULL,

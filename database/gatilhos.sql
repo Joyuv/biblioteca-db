@@ -19,7 +19,6 @@ END //
 
 -- triggers validação
 -- Impedir quantidade negativa de livros
-DELIMITER //
 
 create trigger trg_corrige_quantidade_livro
 before insert on livros
@@ -30,10 +29,7 @@ begin
     end if;
 end//
 
-DELIMITER ;
-
 -- Ajustar ISBN com tamanho diferente de 13 (se não tiver 13 caracteres , ele vira 0)
-DELIMITER //
 
 create trigger trg_corrige_isbn
 before insert on livros
@@ -44,10 +40,7 @@ begin
     end if;
 end//
 
-DELIMITER ;
-
 -- Ajustar data futura (se estiver no futuro coloque na data atual)
-DELIMITER //
 
 create trigger trg_corrige_ano_publicacao_livro
 before insert on livros
@@ -59,10 +52,7 @@ begin
     
 end//
 
-DELIMITER ;
-
 -- Impedir títulos de livros vazios
-DELIMITER //
 
 create trigger trg_livros_titulo_validacao
 before insert on livros
@@ -76,10 +66,8 @@ begin
 end;
 //
 
-DELIMITER ;
 
 -- Impedir multa negativa do usuário
-DELIMITER //
 
 create trigger trg_usuarios_multa_validacao
 before insert on usuarios
@@ -90,5 +78,3 @@ begin
     end if;
 end;
 //
-
-DELIMITER ;
