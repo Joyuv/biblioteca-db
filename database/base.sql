@@ -65,7 +65,7 @@ CREATE TABLE logs(
     data_alteracao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     registro_id INT NOT NULL,
     dados_antigos JSON NOT NULL,
-    dados_atuais JSON,
-    usuario_id INT NOT NULL, 
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
+    dados_atuais JSON
+    -- usuario_id INT NOT NULL, 
+    -- FOREIGN KEY (usuario_id) REFERENCES usuarios(id_usuario)
 );

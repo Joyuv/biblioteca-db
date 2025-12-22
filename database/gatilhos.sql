@@ -78,3 +78,173 @@ begin
     end if;
 end;
 //
+
+-- TRIGGERS AUDITORIA
+
+CREATE TRIGGER trg_log_update_livro AFTER UPDATE ON livros
+FOR EACH ROW
+BEGIN
+    INSERT INTO logs(
+        tabela,
+        acao,
+        registro_id,
+        dados_antigos,
+        dados_atuais
+    ) VALUES (
+        'livros',
+        'update',
+        NEW.id_livro,
+        JSON_OBJECT( -- DADOS ANTIGOS
+			'id_livro', OLD.id_livro,
+            'titulo', OLD.titulo,
+            'autor_id', OLD.autor_id,
+            'isbn', OLD.isbn,
+            'ano_publicacao', OLD.ano_publicacao,
+            'genero_id', OLD.genero_id,
+            'editora_id', OLD.editora_id,
+            'quantidade_disponivel', OLD.quantidade_disponivel,
+            'resumo', OLD.resumo
+        ),
+		JSON_OBJECT( -- DADOS ATUAIS
+			'id_livro', NEW.id_livro,
+            'titulo', NEW.titulo,
+            'autor_id', NEW.autor_id,
+            'isbn', NEW.isbn,
+            'ano_publicacao', NEW.ano_publicacao,
+            'genero_id', NEW.genero_id,
+            'editora_id', NEW.editora_id,
+            'quantidade_disponivel', NEW.quantidade_disponivel,
+            'resumo', NEW.resumo
+        )
+    );
+END;
+// 
+
+CREATE TRIGGER trg_log_delete_livro AFTER DELETE ON livros
+FOR EACH ROW
+BEGIN
+    INSERT INTO logs(
+        tabela,
+        acao,
+        registro_id,
+        dados_antigos
+    ) VALUES (
+        'livros',
+        'delete',
+        OLD.id_livro,
+        JSON_OBJECT( -- DADOS ANTIGOS
+			'id_livro', OLD.id_livro,
+            'titulo', OLD.titulo,
+            'autor_id', OLD.autor_id,
+            'isbn', OLD.isbn,
+            'ano_publicacao', OLD.ano_publicacao,
+            'genero_id', OLD.genero_id,
+            'editora_id', OLD.editora_id,
+            'quantidade_disponivel', OLD.quantidade_disponivel,
+            'resumo', OLD.resumo
+        )
+    );
+END;
+// 
+
+CREATE TRIGGER trg_log_update_autor AFTER UPDATE ON autores
+FOR EACH ROW
+BEGIN
+    INSERT INTO logs(
+        tabela,
+        acao,
+        registro_id,
+        dados_antigos,
+        dados_atuais
+    ) VALUES (
+        'autores',
+        'update',
+        NEW.id_autor,
+        JSON_OBJECT( -- DADOS ANTIGOS
+			'id_autor', OLD.id_autor,
+            'nome_autor', OLD.nome_autor,
+            'nacionalidade', OLD.nacionalidade,
+            'data_nascimento', OLD.data_nascimento,
+            'biografia', OLD.biografia
+        ),
+		JSON_OBJECT( -- DADOS ATUAIS
+			'id_autor', NEW.id_autor,
+            'nome_autor', NEW.nome_autor,
+            'nacionalidade', NEW.nacionalidade,
+            'data_nascimento', NEW.data_nascimento,
+            'biografia', NEW.biografia
+        )
+    );
+END;
+// 
+
+CREATE TRIGGER trg_log_delete_autor AFTER DELETE ON autores
+FOR EACH ROW
+BEGIN
+    INSERT INTO logs(
+        tabela,
+        acao,
+        registro_id,
+        dados_antigos
+    ) VALUES (
+        'autores',
+        'delete',
+        OLD.id_autor,
+        JSON_OBJECT( -- DADOS ANTIGOS
+			'id_autor', OLD.id_autor,
+            'nome_autor', OLD.nome_autor,
+            'nacionalidade', OLD.nacionalidade,
+            'data_nascimento', OLD.data_nascimento,
+            'biografia', OLD.biografia
+        )
+    );
+END;
+// 
+
+CREATE TRIGGER trg_log_update_editora AFTER UPDATE ON editoras
+FOR EACH ROW
+BEGIN
+    INSERT INTO logs(
+        tabela,
+        acao,
+        registro_id,
+        dados_antigos,
+        dados_atuais
+    ) VALUES (
+        'editoras',
+        'update',
+        NEW.id_editora,
+        JSON_OBJECT( -- DADOS ANTIGOS
+			'id_editora', OLD.id_editora,
+            'nome_editora', OLD.nome_editora,
+            'endereco_editora', OLD.endereco_editora
+        ),
+		JSON_OBJECT( -- DADOS ATUAIS
+			'id_editora', NEW.id_editora,
+            'nome_editora', NEW.nome_editora,
+            'endereco_editora', NEW.endereco_editora
+        )
+    );
+END;
+// 
+
+CREATE TRIGGER trg_log_delete_editora AFTER DELETE ON editoras
+FOR EACH ROW
+BEGIN
+    INSERT INTO logs(
+        tabela,
+        acao,
+        registro_id,
+        dados_antigos
+    ) VALUES (
+        'editoras',
+        'delete',
+        OLD.id_editora,
+        JSON_OBJECT( -- DADOS ANTIGOS
+			'id_editora', OLD.id_editora,
+            'nome_editora', OLD.nome_editora,
+            'endereco_editora', OLD.endereco_editora
+        )
+    );
+END;
+// 
