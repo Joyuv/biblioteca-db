@@ -1,6 +1,7 @@
 DELIMITER //
 -- Pós evento
-CREATE TRIGGER trg_repoe_livro AFTER UPDATE 
+CREATE TRIGGER 
+trg_repoe_livro AFTER UPDATE 
 ON emprestimos 
 FOR EACH ROW 
 BEGIN 
@@ -17,9 +18,60 @@ BEGIN
 	UPDATE livros SET quantidade_disponivel = quantidade_disponivel - 1 WHERE id_livro = NEW.livro_id;
 END //
 
+CREATE TRIGGER
+trg_repoe_livro_delete AFTER DELETE
+ON emprestimos
+FOR EACH ROW
+BEGIN
+    IF OLD.status_emprestimo != "devolvido" THEN
+        UPDATE livros SET quantidade_disponivel = quantidade_disponivel + 1 WHERE id_livro = OLD.livro_id;
+    END IF ;
+END //
+
+CREATE TRIGGER
+trg_repoe_livro_delete AFTER DELETE
+ON emprestimos
+FOR EACH ROW
+BEGIN
+    IF OLD.status_emprestimo != "devolvido" THEN
+        UPDATE livros SET quantidade_disponivel = quantidade_disponivel + 1 WHERE id_livro = OLD.livro_id;
+    END IF;
+END //
+
+CREATE TRIGGER
+trg_multar AFTER UPDATE
+ON emprestimos
+FOR EACH ROW
+BEGIN
+	DECLARE dias INTEGER;
+	IF OLD.status_emprestimo != "devolvido" THEN
+		IF NEW.status_emprestimo = "devolvido" THEN
+			IF CURRENT_DATE() > OLD.data_devolucao_prevista THEN
+				SET dias = CURRENT_DATE() - OLD.data_devolucao_prevista;
+                UPDATE usuarios SET multa_atual = multa_atual + (dias * 0.50) WHERE id_usuario = OLD.usuario_id;
+            END IF;
+		END IF;
+	END IF;
+END //
+
+CREATE TRIGGER
+trg_descontar_multa AFTER UPDATE
+ON emprestimos
+FOR EACH ROW
+BEGIN
+	DECLARE dias INTEGER;
+	IF OLD.status_emprestimo != "devolvido" THEN
+		IF NEW.status_emprestimo = "devolvido" THEN
+			IF CURRENT_DATE() < OLD.data_devolucao_prevista THEN
+				SET dias = OLD.data_devolucao_prevista - CURRENT_DATE();
+                UPDATE usuarios SET multa_atual = multa_atual - (dias * 0.05) WHERE id_usuario = OLD.usuario_id;
+            END IF;
+		END IF;
+	END IF;
+END //
+
 -- triggers validação
 -- Impedir quantidade negativa de livros
-DELIMITER //
 
 create trigger trg_corrige_quantidade_livro
 before insert on livros
@@ -30,10 +82,8 @@ begin
     end if;
 end//
 
-DELIMITER ;
 
 -- Ajustar ISBN com tamanho diferente de 13 (se não tiver 13 caracteres , ele vira 0)
-DELIMITER //
 
 create trigger trg_corrige_isbn
 before insert on livros
@@ -44,10 +94,8 @@ begin
     end if;
 end//
 
-DELIMITER ;
 
 -- Ajustar data futura (se estiver no futuro coloque na data atual)
-DELIMITER //
 
 create trigger trg_corrige_ano_publicacao_livro
 before insert on livros
@@ -59,10 +107,8 @@ begin
     
 end//
 
-DELIMITER ;
 
 -- Impedir títulos de livros vazios
-DELIMITER //
 
 create trigger trg_livros_titulo_validacao
 before insert on livros
@@ -76,10 +122,8 @@ begin
 end;
 //
 
-DELIMITER ;
 
 -- Impedir multa negativa do usuário
-DELIMITER //
 
 create trigger trg_usuarios_multa_validacao
 before insert on usuarios
